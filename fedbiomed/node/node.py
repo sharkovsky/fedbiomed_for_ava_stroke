@@ -185,6 +185,8 @@ class Node:
                     | SecaggRequest.__name__
                     | AdditiveSSSetupRequest.__name__
                 ):
+                    message.model_args['node_id']= self.node_id
+                    message.model_args['node_args']= self.node_args
                     self.add_task(message)
                 case SecaggDeleteRequest.__name__:
                     self._task_secagg_delete(message)
