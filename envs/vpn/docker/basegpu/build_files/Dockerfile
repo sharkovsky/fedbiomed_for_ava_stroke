@@ -1,8 +1,10 @@
 # temporary builder image for wireguard tools
 # - need coherent system version with base image
 # - may need update for properly compiling boringtun
-# - 2023-05: `12.1.1-base-ubuntu22.04` is up-to-date version 
-FROM nvidia/cuda:12.1.1-base-ubuntu22.04 AS builder
+# - 2023-05: `12.1.1-devel-ubuntu22.04` is up-to-date version 
+FROM nvidia/cuda:12.1.1-devel-ubuntu22.04 AS builder
+
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y git build-essential cargo
 
@@ -18,7 +20,9 @@ RUN apt-get install -y wireguard-tools
 
 # docker base image for VPN server, Fed-BioMed node and researcher
 # - need proper python version for Fed-BioMed
-FROM nvidia/cuda:12.1.1-base-ubuntu22.04
+FROM nvidia/cuda:12.1.1-devel-ubuntu22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
     apt-get install -y python3.10-full && \
