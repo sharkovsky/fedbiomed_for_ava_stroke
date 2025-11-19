@@ -80,7 +80,7 @@ WORKDIR /fedbiomed
 USER $CONTAINER_USER:$CONTAINER_GROUP
 
 # Install fedbiomed and its requirements
-RUN pip install --no-warn-script-location '.[researcher]'
+RUN pip install --no-warn-script-location 'open-clip-torch==2.24.0' 'ninja==1.11.1.4' 'lmdb==1.7.5' 'torch<2.8' '.[researcher]'
 
 # transmit build-time values to running container
 ENV CONTAINER_BUILD_USER=${CONTAINER_USER}
