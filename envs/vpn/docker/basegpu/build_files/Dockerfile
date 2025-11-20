@@ -25,10 +25,6 @@ FROM nvidia/cuda:11.6.1-devel-ubuntu20.04
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
-    apt-get install -y software-properties-common && \
-    add-apt-repository ppa:deadsnakes/ppa && \
-    apt-get update && \
-    apt-get install -y python3.10 && \
     apt-get install -y iptables iproute2 iputils-ping bash vim net-tools procps build-essential kmod && \
     rm -rf /var/lib/apt/lists/*
 
