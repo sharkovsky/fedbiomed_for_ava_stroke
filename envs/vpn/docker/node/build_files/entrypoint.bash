@@ -30,7 +30,9 @@ trap finish TERM INT QUIT
 # Create node configuration if not existing yet
 su -l -c "export FBM_SECURITY_FORCE_SECURE_AGGREGATION=\"${FBM_SECURITY_FORCE_SECURE_AGGREGATION}\" && \
       export FBM_SECURITY_SECAGG_INSECURE_VALIDATION=false && export FBM_RESEARCHER_IP=10.222.0.2 && \
-      export FBM_RESEARCHER_PORT=50051 && export PYTHONPATH=/fedbiomed && \
+      export FBM_RESEARCHER_PORT=50051 && \ 
+      export PATH=/miniconda/envs/fbm/bin:$PATH && \
+      export PYTHONPATH=/fedbiomed && \
       FBM_SECURITY_TRAINING_PLAN_APPROVAL=\"${FBM_SECURITY_TRAINING_PLAN_APPROVAL:-True}\" \
       FBM_SECURITY_ALLOW_DEFAULT_TRAINING_PLANS=\"${FBM_SECURITY_ALLOW_DEFAULT_TRAINING_PLANS:-False}\" \
       fedbiomed component create --component NODE --path /fbm-node --exist-ok" $CONTAINER_USER
@@ -41,7 +43,7 @@ su -l -c "echo \"$FBM_NODE_START_OPTIONS\" >/fbm-node/FBM_NODE_START_OPTIONS" $C
 
 # Launch node using node options
 su -l -c "rm -rf /fbm-node/sample_NODE_" $CONTAINER_USER
-$SETUSER cd /fbm-node && fedbiomed node -p /fbm-node start --gpu --gpu-num 0 $FBM_NODE_START_OPTIONS &
+#$SETUSER cd /fbm-node && fedbiomed node -p /fbm-node start --gpu --gpu-num 0 $FBM_NODE_START_OPTIONS &
 
 echo "Node container is ready"
 sleep infinity &
