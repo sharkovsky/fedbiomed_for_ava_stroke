@@ -17,15 +17,19 @@ ENV CONTAINER_GID=${CONTAINER_GID:-0}
 ENV CONTAINER_USER=${CONTAINER_USER:-root}
 ENV CONTAINER_GROUP=${CONTAINER_GROUP:-root}
 
-
-RUN apt-get update && apt-get install -y libgmp3-dev libmpfr-dev libmpc-dev apt-utils wget git \
-	python-tk python${PYTHON_VERSION} python3-pip
-
-# Create alias
-RUN ln -sf /usr/bin/python${PYTHON_VERSION} /usr/bin/python && \
-    ln -sf /usr/bin/pip3 /usr/bin/pip
+RUN apt-get update && apt-get install -y libgmp3-dev libmpfr-dev libmpc-dev apt-utils wget git 
 
 RUN apt-get -y install rsync
+
+# Install miniconda  -------------------------------------------------------------
+RUN wget -q --directory-prefix=$HOME https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+        bash $HOME/Miniconda3-latest-Linux-x86_64.sh -b -p /miniconda && \
+        rm -f $HOME/Miniconda3-latest-Linux-x86_64.sh
+# easier to install in a fixed path, not in alternate account home :
+# cannot use "ENV PATH=${PATH}:${HOME}/miniconda/bin" : wont work because
+# ${HOME} not defined in ENV command, only in RUN/etc. (executing in subshell)
+ENV PATH=${PATH}:/miniconda/bin
+RUN chown -R $CONTAINER_USER:$CONTAINER_GROUP /miniconda
 
 # Install nodejs -----------------------------------------------------------------
 RUN wget -qO- https://deb.nodesource.com/setup_23.x | bash -
@@ -75,7 +79,9 @@ WORKDIR /fedbiomed
 USER $CONTAINER_USER:$CONTAINER_GROUP
 
 # Installs fedbiomed and necessary modules
-RUN /usr/bin/python3.10 -m pip install --no-warn-script-location -I 'open-clip-torch==2.24.0' 'ninja==1.11.1.4' 'lmdb==1.7.5' 'torch<2.8'  '.[node]'
+RUN conda create -n fbm -y python=3.10
+ENV PATH=/miniconda/envs/fbm/bin:$PATH
+RUN pip install --no-warn-script-location -I 'open-clip-torch==2.24.0' 'ninja==1.11.1.4' 'lmdb==1.7.5' 'torch<2.8'  '.[node]'
 
 # transmit build-time values to running container
 ENV CONTAINER_BUILD_USER=${CONTAINER_USER}
