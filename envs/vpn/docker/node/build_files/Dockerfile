@@ -78,7 +78,9 @@ WORKDIR /fedbiomed
 USER $CONTAINER_USER:$CONTAINER_GROUP
 
 # Installs fedbiomed and necessary modules
-RUN conda create -n fbm -y python=3.10
+ENV CONDA_ACCEPT_LICENSE=true
+ENV CONDA_PLUGINS_AUTO_ACCEPT_TOS=true
+RUN conda tos accept && conda create -n fbm -y python=3.10
 ENV PATH=/miniconda/envs/fbm/bin:$PATH
 RUN pip install --no-warn-script-location -I 'open-clip-torch==2.24.0' 'ninja==1.11.1.4' 'lmdb==1.7.5' 'torch<2.8'  '.[node]'
 
