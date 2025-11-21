@@ -147,19 +147,19 @@ services:
   # using gpu (need image with gpu support)
   node-gpu:
     << : *standard-node
-    runtime: nvidia
+    #runtime: nvidia
     #
     ## alternate syntax from the `Compose` specification, needs both
     ## Docker Compose v1.28.0+ and a supported config (eg seems not to
     ## be working with CentOS)
     ##
-    #deploy:
-    #  resources:
-    #    reservations:
-    #      devices:
-    #        - driver: nvidia
-    #          #count: 1
-    #          capabilities: [gpu]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              #count: 1
+              capabilities: [gpu]
   #
   # optionally launch a second node instance
   # not using gpu
