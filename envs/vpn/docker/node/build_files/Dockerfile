@@ -29,13 +29,11 @@ RUN wget -q --directory-prefix=$HOME https://repo.anaconda.com/miniconda/Minicon
 # cannot use "ENV PATH=${PATH}:${HOME}/miniconda/bin" : wont work because
 # ${HOME} not defined in ENV command, only in RUN/etc. (executing in subshell)
 ENV PATH=${PATH}:/miniconda/bin
-RUN chown -R $CONTAINER_USER:$CONTAINER_GROUP /miniconda
 
 # Install nodejs -----------------------------------------------------------------
 RUN wget -qO- https://deb.nodesource.com/setup_23.x | bash -
 RUN apt-get install -y nodejs
 RUN npm install --global yarn@1.22
-
 
 # read config.env in interactive shells & setup for reading it in entrypoint
 COPY ./envs/vpn/docker/node/build_files/bashrc_append /tmp
@@ -73,6 +71,7 @@ COPY hatch_build.py /fedbiomed/hatch_build.py
 # Prepare for work in context of alternate account
 RUN chown -R $CONTAINER_USER:$CONTAINER_GROUP /fbm-node # Fed-BioMed node directory
 RUN chown -R $CONTAINER_USER:$CONTAINER_GROUP /fedbiomed
+RUN chown -R $CONTAINER_USER:$CONTAINER_GROUP /miniconda
 WORKDIR /fedbiomed
 
 # Set container user
