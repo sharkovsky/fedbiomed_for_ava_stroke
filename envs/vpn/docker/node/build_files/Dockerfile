@@ -82,7 +82,7 @@ ENV CONDA_ACCEPT_LICENSE=true
 ENV CONDA_PLUGINS_AUTO_ACCEPT_TOS=true
 RUN conda tos accept && conda create -n fbm -y python=3.10
 ENV PATH=/miniconda/envs/fbm/bin:$PATH
-RUN pip install --no-warn-script-location -I 'open-clip-torch==2.24.0' 'ninja==1.11.1.4' 'lmdb==1.7.5' 'torch<2.8'  '.[node]'
+RUN pip install --no-warn-script-location -I 'open-clip-torch==2.24.0' 'ninja==1.11.1.4' 'lmdb==1.7.5' 'torch==1.13.1+cu116' 'torchvision==0.14.1+cu116' 'torchaudio==0.13.1' '.[node]' --extra-index-url https://download.pytorch.org/whl/cu116
 
 # transmit build-time values to running container
 ENV CONTAINER_BUILD_USER=${CONTAINER_USER}
